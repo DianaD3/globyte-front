@@ -13,7 +13,7 @@ import { CSSTransition } from 'react-transition-group';
 import TextField from '@material-ui/core/TextField';
 
 import axios from 'axios';
-const url = 'localhost:5000'
+const url = 'https://globyteapi.azurewebsites.net'
 
 
 function GlobyteNavbar(props) {
