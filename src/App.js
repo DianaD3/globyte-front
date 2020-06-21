@@ -30,7 +30,7 @@ import { forEach } from 'gl-matrix/src/gl-matrix/vec3';
 
 import GlobyteNavbar from './GlobyteNavbar.js'
 
-const url = 'localhost:5000'
+const url = 'https://globyteapi.azurewebsites.net'
 const data = require('./heatmapData.json');
 const data2 = require('./data-test.json');
 const { token, mapStyles } = require('./config.json');
