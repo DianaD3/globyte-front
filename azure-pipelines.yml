@@ -37,20 +37,20 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-- stage: deploy
-  displayName: Deploy app to Azure WebApp
-  jobs:  
-  - job: Deploy
-    displayName: Deploy
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: '7c51cad7-bd9c-4218-a4fc-cb6d19e49637s'
-        appType: 'webAppContainer'
-        WebAppName: 'Globyte'
-        DockerNamespace: '$(containerRegistry)'
-        DockerRepository: '$(imageRepository)'
-        DockerImageTag: '$(tag)'
+# - stage: deploy
+#   displayName: Deploy app to Azure WebApp
+#   jobs:  
+#   - job: Deploy
+#     displayName: Deploy
+#     pool:
+#       vmImage: $(vmImageName)
+#     steps:
+#     - task: AzureRmWebAppDeployment@4
+#       inputs:
+#         ConnectionType: 'AzureRM'
+#         azureSubscription: '7c51cad7-bd9c-4218-a4fc-cb6d19e49637s'
+#         appType: 'webAppContainer'
+#         WebAppName: 'Globyte'
+#         DockerNamespace: '$(containerRegistry)'
+#         DockerRepository: '$(imageRepository)'
+#         DockerImageTag: '$(tag)'
