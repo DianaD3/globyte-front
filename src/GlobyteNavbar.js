@@ -11,6 +11,11 @@ import { ReactComponent as BoltIcon } from './icons/bolt.svg';
 import React, { useState, useEffect, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+
 
 import axios from 'axios';
 const url = 'https://globyteapi.azurewebsites.net'
@@ -45,7 +50,7 @@ function GlobyteNavbar(props) {
 
   return (
     <Navbar>
-      <a>{token ? `\nHello, ${username ? username : '...'}!` : 'Welcome!'}</a>
+      <a style={{"alignSelf": "center"}}><h3>{token ? `\nHello, ${username ? username : '...'}!` : 'Welcome!'}</h3></a>
       <NavItem icon={<CaretIcon />}>
         {token ? <DropdownLogoutMenu onChange={handleChange}></DropdownLogoutMenu> : <DropdownAuthMenu onChange={handleChange}></DropdownAuthMenu>}
       </NavItem>
@@ -57,6 +62,8 @@ function GlobyteNavbar(props) {
 function Navbar(props) {
   return (
     <nav className="navbar">
+      <img alt="logo" src="./logo.png" style={{"height":"60px",width:"auto", float:"left"}}/>
+      <a style={{float:"left", "alignSelf": "center"}}><h3>Globyte</h3></a>
       <ul className="navbar-nav">{props.children}</ul>
     </nav>
   );
@@ -155,7 +162,8 @@ function DropdownLogoutMenu(props) {
 function DropdownAuthMenu(props) {
   const [activeMenu, setActiveMenu] = useState('main');
   const [menuHeight, setMenuHeight] = useState(null);
-  const [formData, setFormData] = useState([])
+  const [formData, setFormData] = useState({securityQuestion: "What was your mother's maiden name?"})
+  const [error, setError] = useState(false)
   const dropdownRef = useRef(null);
 
   const login = () => {
@@ -164,19 +172,44 @@ function DropdownAuthMenu(props) {
       const response = res.data;
       console.log(response)
       if(!response.err){
+        setError(false);
         props.onChange(response.token)
         //refreshPage()
+      }
+      else {
+        setError(true)
       }
     })
   }
 
   const register = () => {
+    formData.securityQuestion = formData.securityQuestion || "What is your mother's maiden name?";
     console.log(formData)
     axios.post(`http://${url}/auth/register`, formData, {crossdomain: true}).then(res => {
       const response = res.data;
       console.log(response)
       if(!response.err){
-        //refreshPage()
+        setError(false);
+        refreshPage()
+      }
+      else {
+        setError(true)
+      }
+    })
+  }
+
+  const changePassword = () => {
+    formData.securityQuestion = formData.securityQuestion || "What is your mother's maiden name?";
+    console.log(formData)
+    axios.post(`http://${url}/auth/changePassword`, formData, {crossdomain: true}).then(res => {
+      const response = res.data;
+      console.log(response)
+      if(!response.err){
+        setError(false);
+        refreshPage()
+      }
+      else {
+        setError(true);
       }
     })
   }
@@ -224,6 +257,13 @@ function DropdownAuthMenu(props) {
     )
   }
 
+  function handleQuestionChange(e) {
+    let newFormData = formData; 
+    newFormData["securityQuestion"]=e.target.value; 
+    setFormData(newFormData);
+    console.log(formData)
+  }
+
   return (
     <div className="dropdown" style={{ height: menuHeight }} ref={dropdownRef}>
       <CSSTransition
@@ -236,13 +276,13 @@ function DropdownAuthMenu(props) {
           <DropdownItem
             leftIcon={<PlusIcon />}
             rightIcon={<ChevronIcon />}
-            onClick = {() => {setActiveMenu("login"); setFormData({})}}>
+            onClick = {() => {setActiveMenu("login"); setFormData({}); setError(false);}}>
             Log in
           </DropdownItem>
           <DropdownItem
             leftIcon={<PlusIcon />}
             rightIcon={<ChevronIcon />}
-            onClick = {() => {setActiveMenu("register"); setFormData({})}}>
+            onClick = {() => {setActiveMenu("register"); setFormData({}); setError(false);}}>
             Register
           </DropdownItem>
 
@@ -256,12 +296,14 @@ function DropdownAuthMenu(props) {
         unmountOnExit
         onEnter={calcHeight}>
         <div className="menu">
-          <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({})}} leftIcon={<ArrowIcon />}>
-            <h2>Log in</h2>
+          <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({}); setError(false);}} leftIcon={<ArrowIcon />}>
+            <h2 style={error ? {color: "red"} : {}}>{error ? "Invalid credentials!" : "Log in"}</h2>
           </DropdownItem>
           <DropdownField id='email' fieldName='email'></DropdownField>
           <DropdownPasswordField id='password' fieldName='password'></DropdownPasswordField>
-          <DropdownButton onClick = {() => login()}><h3>Log in</h3></DropdownButton>
+          {/* {!error || <DropdownItem>Error</DropdownItem>} */}
+          <DropdownButton onClick = {() => {login();}}><h3>Log in</h3></DropdownButton>
+          <DropdownButton onClick = {() => {setActiveMenu("forgotPassword"); setFormData({}); setError(false);}}><h3>Forgot Password?</h3></DropdownButton>
         </div>
       </CSSTransition>
 
@@ -272,13 +314,33 @@ function DropdownAuthMenu(props) {
         unmountOnExit
         onEnter={calcHeight}>
         <div className="menu">
-          <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({})}} leftIcon={<ArrowIcon />}>
-            <h2>Register</h2>
+          <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({}); setError(false);}} leftIcon={<ArrowIcon />}>
+          <h2 style={error ? {color: "red", fontSize: 20} : {}}>{error ? "Invalid form or user already exists!" : "Register"}</h2>
           </DropdownItem>
           <DropdownField id='username' fieldName='username'></DropdownField>
           <DropdownField id='email' fieldName='email'></DropdownField>
           <DropdownPasswordField id='password' fieldName='password'></DropdownPasswordField>
-          <DropdownButton onClick = {() => register()}><h3>Register</h3></DropdownButton>
+          <a>What is your mother's maiden name?</a>
+          <DropdownField id='securityAnswer' fieldName='answer'></DropdownField>
+          <DropdownButton id='registerButton' onClick = {() => register()}><h3>Register</h3></DropdownButton>
+        </div>
+      </CSSTransition>
+
+      <CSSTransition
+        in={activeMenu === 'forgotPassword'}
+        timeout={500}
+        classNames="menu-secondary"
+        unmountOnExit
+        onEnter={calcHeight}>
+        <div className="menu">
+          <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({}); setError(false);}} leftIcon={<ArrowIcon />}>
+            <h2 style={error ? {color: "red"} : {}}>{error ? "Incorrect answer!" : "Forgot Password?"}</h2>
+          </DropdownItem>
+          <DropdownField id='email' fieldName='email'></DropdownField>
+          <a>What is your mother's maiden name?</a>
+          <DropdownField id='securityAnswer' fieldName='answer'></DropdownField>
+          <DropdownPasswordField id='newPassword' fieldName='New Password'></DropdownPasswordField>
+          <DropdownButton id='changePasswordButton' onClick = {() => changePassword()}><h3>Change Password</h3></DropdownButton>
         </div>
       </CSSTransition>
     </div>

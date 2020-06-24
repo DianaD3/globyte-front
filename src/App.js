@@ -24,8 +24,7 @@ import MomentUtils from '@date-io/moment';
 import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
-import logo from './logo.svg';
-import './index.css';
+  import './index.css';
 import { forEach } from 'gl-matrix/src/gl-matrix/vec3';
 
 import GlobyteNavbar from './GlobyteNavbar.js'
@@ -228,9 +227,6 @@ class App extends PureComponent {
                         name: 'layer',
                         id: 'layers',
                     }}>
-                        <MenuItem value="">
-                        <em>None</em>
-                        </MenuItem>
                         {this.renderListOfLayers()}
                     </Select>
                 </FormControl>
