@@ -48,7 +48,7 @@ stages:
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
-        azureSubscription: 'Azure for Students'
+        azureSubscription: '7c51cad7-bd9c-4218-a4fc-cb6d19e49637s'
         appType: 'webAppContainer'
         WebAppName: 'Globyte'
         DockerNamespace: '$(containerRegistry)'
