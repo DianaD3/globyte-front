@@ -32,7 +32,7 @@ function GlobyteNavbar(props) {
     }
     else {
       console.log(token)
-      axios.post(`http://${url}/auth/getCurrentUser`, {}, {headers: {'Authorization': token}}).then(res => {
+      axios.post(`${url}/auth/getCurrentUser`, {}, {headers: {'Authorization': token}}).then(res => {
         const response = res.data;
         console.log(response)
         if(!response.err){
@@ -168,7 +168,7 @@ function DropdownAuthMenu(props) {
 
   const login = () => {
     console.log(formData)
-    axios.post(`http://${url}/auth/login`, formData, {crossdomain: true}).then(res => {
+    axios.post(`${url}/auth/login`, formData, {crossdomain: true}).then(res => {
       const response = res.data;
       console.log(response)
       if(!response.err){
@@ -185,7 +185,7 @@ function DropdownAuthMenu(props) {
   const register = () => {
     formData.securityQuestion = formData.securityQuestion || "What is your mother's maiden name?";
     console.log(formData)
-    axios.post(`http://${url}/auth/register`, formData, {crossdomain: true}).then(res => {
+    axios.post(`${url}/auth/register`, formData, {crossdomain: true}).then(res => {
       const response = res.data;
       console.log(response)
       if(!response.err){
@@ -201,7 +201,7 @@ function DropdownAuthMenu(props) {
   const changePassword = () => {
     formData.securityQuestion = formData.securityQuestion || "What is your mother's maiden name?";
     console.log(formData)
-    axios.post(`http://${url}/auth/changePassword`, formData, {crossdomain: true}).then(res => {
+    axios.post(`${url}/auth/changePassword`, formData, {crossdomain: true}).then(res => {
       const response = res.data;
       console.log(response)
       if(!response.err){
@@ -486,7 +486,7 @@ export default GlobyteNavbar;
 //   }
 
 //   getData() {
-//     axios.get(`http://${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
+//     axios.get(`${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
 //       .then(res => {
 //         const response = res.data;
 //         this.setState({ layerData: response });
@@ -494,7 +494,7 @@ export default GlobyteNavbar;
 //   }
 
 //   getLayers() {
-//     axios.get(`http://${url}/get/layers`, {crossdomain: true })
+//     axios.get(`${url}/get/layers`, {crossdomain: true })
 //       .then(res => {
 //         const response = res.data;
 //         console.log(response);
