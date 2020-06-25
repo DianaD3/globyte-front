@@ -28,6 +28,7 @@ import Button from '@material-ui/core/Button';
 import { forEach } from 'gl-matrix/src/gl-matrix/vec3';
 
 import GlobyteNavbar from './GlobyteNavbar.js'
+import { grey } from '@material-ui/core/colors';
 
 const url = 'https://globyteapi.azurewebsites.net'
 const data = require('./heatmapData.json');
@@ -122,10 +123,12 @@ class App extends PureComponent {
     super();
     this.state = {
       selectedLayer: '',
-      selectedStartDate: '2010-05-01',
-      selectedEndDate: '2010-05-25',
+      selectedStartDate: '1960-01-01',
+      selectedEndDate: '2020-06-25',
       center:[25,45],
-      layerData:null
+      layerData:null,
+      loggedIn: false,
+      loading: false
     };
     this.handleLayerChange = this.handleLayerChange.bind(this);
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -134,15 +137,27 @@ class App extends PureComponent {
   }
 
   getData() {
-    axios.get(`http://${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
+    this.setState({loading: true})
+    axios.get(`${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
       .then(res => {
         const response = res.data;
+        console.log(response)
+        if(!response || response.features.length == 0){
+          alert("No datapoints found for the specified dates and layer.")
+        }
         this.setState({ layerData: response });
+        this.setState({loading: false})
       })
   }
 
   getLayers(token) {
-    axios.get(`http://${url}/get/layers`, {crossdomain: true, headers: {Authorization: token} })
+    if(token){
+      this.state.loggedIn = true
+    }
+    else {
+      this.state.loggedIn = false
+    }
+    axios.get(`${url}/get/layers`, {crossdomain: true, headers: {Authorization: token} })
       .then(res => {
         const response = res.data;
         console.log(response);
@@ -230,6 +245,9 @@ class App extends PureComponent {
                         {this.renderListOfLayers()}
                     </Select>
                 </FormControl>
+                <div>
+                  {!this.state.loggedIn && <a style={{fontSize: 13, color: grey}}>Note: Please log in to see all layers</a>}
+                </div>
                 <Typography variant="body1" gutterBottom style={{"marginTop":"40px"}}>
                     Select Start Date:
                 </Typography>
@@ -260,7 +278,7 @@ class App extends PureComponent {
                     />
 
                     <Button variant="contained" color="primary" className={classes.button} onClick={this.getData}>
-                    RUN
+                    {this.state.loading ? "Loading..." : "RUN"}
                 </Button>
                     
                 </div>

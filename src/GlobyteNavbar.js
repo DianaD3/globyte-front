@@ -32,7 +32,7 @@ function GlobyteNavbar(props) {
     }
     else {
       console.log(token)
-      axios.post(`http://${url}/auth/getCurrentUser`, {}, {headers: {'Authorization': token}}).then(res => {
+      axios.post(`${url}/auth/getCurrentUser`, {}, {headers: {'Authorization': token}}).then(res => {
         const response = res.data;
         console.log(response)
         if(!response.err){
@@ -46,6 +46,9 @@ function GlobyteNavbar(props) {
 
   function handleChange(newToken){
     setToken(newToken);
+    if(!newToken){
+      refreshPage();
+    }
   }
 
   return (
@@ -164,11 +167,12 @@ function DropdownAuthMenu(props) {
   const [menuHeight, setMenuHeight] = useState(null);
   const [formData, setFormData] = useState({securityQuestion: "What was your mother's maiden name?"})
   const [error, setError] = useState(false)
+  const [formError, setFormError] = useState(false)
   const dropdownRef = useRef(null);
 
   const login = () => {
     console.log(formData)
-    axios.post(`http://${url}/auth/login`, formData, {crossdomain: true}).then(res => {
+    axios.post(`${url}/auth/login`, formData, {crossdomain: true}).then(res => {
       const response = res.data;
       console.log(response)
       if(!response.err){
@@ -185,23 +189,30 @@ function DropdownAuthMenu(props) {
   const register = () => {
     formData.securityQuestion = formData.securityQuestion || "What is your mother's maiden name?";
     console.log(formData)
-    axios.post(`http://${url}/auth/register`, formData, {crossdomain: true}).then(res => {
-      const response = res.data;
-      console.log(response)
-      if(!response.err){
-        setError(false);
-        refreshPage()
-      }
-      else {
-        setError(true)
-      }
-    })
+    if(!formData || !formData.email || !formData.username || !formData.password || !formData.securityAnswer || !formData.email.includes('@')){
+      setFormError(true)
+    }
+    else {
+      setFormError(false)
+      axios.post(`${url}/auth/register`, formData, {crossdomain: true}).then(res => {
+        const response = res.data;
+        console.log(response)
+        if(!response.err){
+          setError(false);
+          refreshPage()
+        }
+        else {
+          setError(true)
+        }
+      })
+    }
+
   }
 
   const changePassword = () => {
     formData.securityQuestion = formData.securityQuestion || "What is your mother's maiden name?";
     console.log(formData)
-    axios.post(`http://${url}/auth/changePassword`, formData, {crossdomain: true}).then(res => {
+    axios.post(`${url}/auth/changePassword`, formData, {crossdomain: true}).then(res => {
       const response = res.data;
       console.log(response)
       if(!response.err){
@@ -314,8 +325,8 @@ function DropdownAuthMenu(props) {
         unmountOnExit
         onEnter={calcHeight}>
         <div className="menu">
-          <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({}); setError(false);}} leftIcon={<ArrowIcon />}>
-          <h2 style={error ? {color: "red", fontSize: 20} : {}}>{error ? "Invalid form or user already exists!" : "Register"}</h2>
+          <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({}); setFormError(false); setError(false);}} leftIcon={<ArrowIcon />}>
+          <h2 style={error || formError ? {color: "red"} : {}}>{formError ? "Invalid form" : error ? "User already exists!" : "Register"}</h2>
           </DropdownItem>
           <DropdownField id='username' fieldName='username'></DropdownField>
           <DropdownField id='email' fieldName='email'></DropdownField>
@@ -486,7 +497,7 @@ export default GlobyteNavbar;
 //   }
 
 //   getData() {
-//     axios.get(`http://${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
+//     axios.get(`${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
 //       .then(res => {
 //         const response = res.data;
 //         this.setState({ layerData: response });
@@ -494,7 +505,7 @@ export default GlobyteNavbar;
 //   }
 
 //   getLayers() {
-//     axios.get(`http://${url}/get/layers`, {crossdomain: true })
+//     axios.get(`${url}/get/layers`, {crossdomain: true })
 //       .then(res => {
 //         const response = res.data;
 //         console.log(response);
