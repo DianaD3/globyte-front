@@ -134,7 +134,7 @@ class App extends PureComponent {
   }
 
   getData() {
-    axios.get(`http://${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
+    axios.get(`${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
       .then(res => {
         const response = res.data;
         this.setState({ layerData: response });
@@ -142,7 +142,7 @@ class App extends PureComponent {
   }
 
   getLayers(token) {
-    axios.get(`http://${url}/get/layers`, {crossdomain: true, headers: {Authorization: token} })
+    axios.get(`${url}/get/layers`, {crossdomain: true, headers: {Authorization: token} })
       .then(res => {
         const response = res.data;
         console.log(response);
