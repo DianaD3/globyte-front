@@ -65,8 +65,8 @@ function GlobyteNavbar(props) {
 function Navbar(props) {
   return (
     <nav className="navbar">
-      <img alt="logo" src="./logo.png" style={{"height":"60px",width:"auto", float:"left"}}/>
-      <a style={{float:"left", "alignSelf": "center"}}><h3>Globyte</h3></a>
+      <img alt="logo" src="./logo.png" style={{margin:"5px 0px 0px 22px","height":"50px",width:"auto", float:"left"}}/>
+      
       <ul className="navbar-nav">{props.children}</ul>
     </nav>
   );
