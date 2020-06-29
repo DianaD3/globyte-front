@@ -53,7 +53,7 @@ function GlobyteNavbar(props) {
 
   return (
     <Navbar>
-      <a style={{"alignSelf": "center"}}><h3>{token ? `\nHello, ${username ? username : '...'}!` : 'Welcome!'}</h3></a>
+      <a style={{"alignSelf": "center"}}><h3>{token ? `\nBine ai venit, ${username ? username : '...'}!` : 'Autentificare'}</h3></a>
       <NavItem icon={<CaretIcon />}>
         {token ? <DropdownLogoutMenu onChange={handleChange}></DropdownLogoutMenu> : <DropdownAuthMenu onChange={handleChange}></DropdownAuthMenu>}
       </NavItem>
@@ -154,7 +154,7 @@ function DropdownLogoutMenu(props) {
             leftIcon={<PlusIcon />}
             rightIcon={<ChevronIcon />}
             onClick = {() => {props.onChange(undefined)}}>
-            Log out
+            Ieșire din cont
           </DropdownItem>
         </div>
       </CSSTransition>
@@ -165,7 +165,7 @@ function DropdownLogoutMenu(props) {
 function DropdownAuthMenu(props) {
   const [activeMenu, setActiveMenu] = useState('main');
   const [menuHeight, setMenuHeight] = useState(null);
-  const [formData, setFormData] = useState({securityQuestion: "What was your mother's maiden name?"})
+  const [formData, setFormData] = useState({securityQuestion: "Care este numele celui mai bun prieten?"})
   const [error, setError] = useState(false)
   const [formError, setFormError] = useState(false)
   const dropdownRef = useRef(null);
@@ -187,7 +187,7 @@ function DropdownAuthMenu(props) {
   }
 
   const register = () => {
-    formData.securityQuestion = formData.securityQuestion || "What is your mother's maiden name?";
+    formData.securityQuestion = formData.securityQuestion || "Care este numele celui mai bun prieten?";
     console.log(formData)
     if(!formData || !formData.email || !formData.username || !formData.password || !formData.securityAnswer || !formData.email.includes('@')){
       setFormError(true)
@@ -210,7 +210,7 @@ function DropdownAuthMenu(props) {
   }
 
   const changePassword = () => {
-    formData.securityQuestion = formData.securityQuestion || "What is your mother's maiden name?";
+    formData.securityQuestion = formData.securityQuestion || "Care este numele celui mai bun prieten?";
     console.log(formData)
     axios.post(`${url}/auth/changePassword`, formData, {crossdomain: true}).then(res => {
       const response = res.data;
@@ -288,13 +288,13 @@ function DropdownAuthMenu(props) {
             leftIcon={<PlusIcon />}
             rightIcon={<ChevronIcon />}
             onClick = {() => {setActiveMenu("login"); setFormData({}); setError(false);}}>
-            Log in
+            Accesare cont
           </DropdownItem>
           <DropdownItem
             leftIcon={<PlusIcon />}
             rightIcon={<ChevronIcon />}
             onClick = {() => {setActiveMenu("register"); setFormData({}); setError(false);}}>
-            Register
+            Înregistrare
           </DropdownItem>
 
         </div>
@@ -308,13 +308,13 @@ function DropdownAuthMenu(props) {
         onEnter={calcHeight}>
         <div className="menu">
           <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({}); setError(false);}} leftIcon={<ArrowIcon />}>
-            <h2 style={error ? {color: "red"} : {}}>{error ? "Invalid credentials!" : "Log in"}</h2>
+            <h3 style={error ? {color: "red", width: "200px"} : {}}>{error ? "Parola sau email incorecte!" : "Accesare cont"}</h3>
           </DropdownItem>
           <DropdownField id='email' fieldName='email'></DropdownField>
-          <DropdownPasswordField id='password' fieldName='password'></DropdownPasswordField>
+          <DropdownPasswordField id='password' fieldName='parola'></DropdownPasswordField>
           {/* {!error || <DropdownItem>Error</DropdownItem>} */}
-          <DropdownButton onClick = {() => {login();}}><h3>Log in</h3></DropdownButton>
-          <DropdownButton onClick = {() => {setActiveMenu("forgotPassword"); setFormData({}); setError(false);}}><h3>Forgot Password?</h3></DropdownButton>
+          <DropdownButton onClick = {() => {login();}}><h3>Conectare</h3></DropdownButton>
+          <DropdownButton onClick = {() => {setActiveMenu("forgotPassword"); setFormData({}); setError(false);}}><h3>Ai uitat parola?</h3></DropdownButton>
         </div>
       </CSSTransition>
 
@@ -326,14 +326,14 @@ function DropdownAuthMenu(props) {
         onEnter={calcHeight}>
         <div className="menu">
           <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({}); setFormError(false); setError(false);}} leftIcon={<ArrowIcon />}>
-          <h2 style={error || formError ? {color: "red"} : {}}>{formError ? "Invalid form" : error ? "User already exists!" : "Register"}</h2>
+          <h3 style={error || formError ? {color: "red"} : {}}>{formError ? "Formular invalid" : error ? "Utilizatorul există deja!" : "Înregistrare"}</h3>
           </DropdownItem>
           <DropdownField id='username' fieldName='username'></DropdownField>
           <DropdownField id='email' fieldName='email'></DropdownField>
-          <DropdownPasswordField id='password' fieldName='password'></DropdownPasswordField>
-          <a>What is your mother's maiden name?</a>
-          <DropdownField id='securityAnswer' fieldName='answer'></DropdownField>
-          <DropdownButton id='registerButton' onClick = {() => register()}><h3>Register</h3></DropdownButton>
+          <DropdownPasswordField id='password' fieldName='parola'></DropdownPasswordField>
+          <a>Care este numele celui mai bun prieten?</a>
+          <DropdownField id='securityAnswer' fieldName='răspuns de securitate'></DropdownField>
+          <DropdownButton id='registerButton' onClick = {() => register()}><h3>Creeaza cont</h3></DropdownButton>
         </div>
       </CSSTransition>
 
@@ -345,13 +345,13 @@ function DropdownAuthMenu(props) {
         onEnter={calcHeight}>
         <div className="menu">
           <DropdownItem onClick = {() => {setActiveMenu("main"); setFormData({}); setError(false);}} leftIcon={<ArrowIcon />}>
-            <h2 style={error ? {color: "red"} : {}}>{error ? "Incorrect answer!" : "Forgot Password?"}</h2>
+            <h3 style={error ? {color: "red"} : {}}>{error ? "Informații invalide!" : "Ai uitat parola?"}</h3>
           </DropdownItem>
           <DropdownField id='email' fieldName='email'></DropdownField>
-          <a>What is your mother's maiden name?</a>
-          <DropdownField id='securityAnswer' fieldName='answer'></DropdownField>
-          <DropdownPasswordField id='newPassword' fieldName='New Password'></DropdownPasswordField>
-          <DropdownButton id='changePasswordButton' onClick = {() => changePassword()}><h3>Change Password</h3></DropdownButton>
+          <a>Care este numele celui mai bun prieten?</a>
+          <DropdownField id='securityAnswer' fieldName='răspuns de securitate'></DropdownField>
+          <DropdownPasswordField id='newPassword' fieldName='noua parolă'></DropdownPasswordField>
+          <DropdownButton id='changePasswordButton' onClick = {() => changePassword()}><h3>Schimbă parola</h3></DropdownButton>
         </div>
       </CSSTransition>
     </div>

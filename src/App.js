@@ -138,21 +138,33 @@ class App extends PureComponent {
 
   getData() {
     this.setState({loading: true})
+    if(this.state.selectedStartDate>this.state.selectedEndDate){
+      alert("Data de început nu poate fi mai mare decât cea de sfârșit.")
+      this.setState({loading: false})
+    }
+    if(this.state.selectedLayer === ""){
+      alert("Vă rugăm selectați tipul dezastrului natural.")
+      this.setState({loading: false})
+    }
+    else{
     axios.get(`${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
       .then(res => {
         const response = res.data;
         console.log(response)
         if(!response || response.features.length == 0){
-          alert("No datapoints found for the specified dates and layer.")
+          alert("Nu există date pentru perioada și tipul selectat.")
         }
+        
         this.setState({ layerData: response });
         this.setState({loading: false})
       })
+    }
   }
 
   getLayers(token) {
     if(token){
       this.state.loggedIn = true
+      
     }
     else {
       this.state.loggedIn = false
@@ -226,15 +238,15 @@ class App extends PureComponent {
             <Card className={classes.card}>
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">ANALYSIS</Typography>
+                <Typography variant="h6">ANALIZĂ</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                 <div>
                 <Typography variant="body1" gutterBottom>
-                    Select Layer Data:
+                    Selectați următoarele informații:
                 </Typography>
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="layers">Layers</InputLabel>
+                    <InputLabel htmlFor="layers">Tipul dezastrului natural</InputLabel>
                     <Select
                         value={this.state.selectedLayer}
                         onChange={this.handleLayerChange}
@@ -246,10 +258,10 @@ class App extends PureComponent {
                     </Select>
                 </FormControl>
                 <div>
-                  {!this.state.loggedIn && <a style={{fontSize: 13, color: grey}}>Note: Please log in to see all layers</a>}
+                  {!this.state.loggedIn && <a style={{fontSize: 13, color: grey, }}>Atenție: Vă rugăm să vă autentificați pentru a vedea mai multe tipuri de dezastre și rapoartele de analiză!</a>}
                 </div>
                 <Typography variant="body1" gutterBottom style={{"marginTop":"40px"}}>
-                    Select Start Date:
+                    Selectați Data Inițială:
                 </Typography>
                 <TextField
                     id="date"
@@ -264,7 +276,7 @@ class App extends PureComponent {
                     
                 
                 <Typography variant="body1" gutterBottom style={{"marginTop":"40px"}}>
-                    Select End Date:
+                    Selectați Data Finală:
                 </Typography>
                 <TextField
                     id="date"
@@ -277,8 +289,8 @@ class App extends PureComponent {
                     }}
                     />
 
-                    <Button variant="contained" color="primary" className={classes.button} onClick={this.getData}>
-                    {this.state.loading ? "Loading..." : "RUN"}
+                    <Button variant="contained"  color="primary" className={classes.button} onClick={this.getData}>
+                    {this.state.loading ? "Se încarcă..." : "AFIȘARE"}
                 </Button>
                     
                 </div>
@@ -286,6 +298,7 @@ class App extends PureComponent {
                 </ExpansionPanelDetails>
             </ExpansionPanel>
             </Card>
+            {this.state.loggedIn && <iframe width="100%" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiODQwYzAxMTItZTVkZC00YTY4LTlhYzYtNmI5ZTE0NjlkODhiIiwidCI6ImIzMmI3Y2UwLTg4ZGUtNGEzMi1hMGQzLTY5YTM0OGRiZmUwZSIsImMiOjl9" frameborder="0" allowFullScreen="true"></iframe>}
         </div>
         </div>
     );
