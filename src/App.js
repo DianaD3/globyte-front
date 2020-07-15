@@ -30,9 +30,7 @@ import { forEach } from 'gl-matrix/src/gl-matrix/vec3';
 import GlobyteNavbar from './GlobyteNavbar.js'
 import { grey } from '@material-ui/core/colors';
 
-const url = 'https://globyteapi.azurewebsites.net'
-const data = require('./heatmapData.json');
-const data2 = require('./data-test.json');
+const url = 'http://localhost:5000'
 const { token, mapStyles } = require('./config.json');
 
 const Map = ReactMapboxGl({
@@ -149,7 +147,7 @@ class App extends PureComponent {
     else{
     axios.get(`${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
       .then(res => {
-        const response = res.data;
+        const response = res.data; //body-ul responsului
         console.log(response)
         if(!response || response.features.length == 0){
           alert("Nu există date pentru perioada și tipul selectat.")
@@ -161,7 +159,7 @@ class App extends PureComponent {
     }
   }
 
-  getLayers(token) {
+  getLayers(token) { // preia numele straturilor
     if(token){
       this.state.loggedIn = true
       
@@ -207,7 +205,7 @@ class App extends PureComponent {
   };
 
 
-
+// imi construieste? pagina
   render() {
     const { classes } = this.props;
     return (
@@ -290,7 +288,7 @@ class App extends PureComponent {
                     />
 
                     <Button variant="contained"  color="primary" className={classes.button} onClick={this.getData}>
-                    {this.state.loading ? "Se încarcă..." : "AFIȘARE"}
+                    {this.state.loading ? "Se încarcă..." : "AFIȘARE"} 
                 </Button>
                     
                 </div>
@@ -298,7 +296,7 @@ class App extends PureComponent {
                 </ExpansionPanelDetails>
             </ExpansionPanel>
             </Card>
-            {this.state.loggedIn && <iframe width="100%" height="600" src="https://app.powerbi.com/view?r=eyJrIjoiODQwYzAxMTItZTVkZC00YTY4LTlhYzYtNmI5ZTE0NjlkODhiIiwidCI6ImIzMmI3Y2UwLTg4ZGUtNGEzMi1hMGQzLTY5YTM0OGRiZmUwZSIsImMiOjl9" frameborder="0" allowFullScreen="true"></iframe>}
+            {this.state.loggedIn && <iframe width="100%" height="600" marginTop="10px" src="https://app.powerbi.com/view?r=eyJrIjoiYzIyODE4NzUtNzAzNi00ODE5LTgwNTUtYWVhMDJlNjZkY2ZmIiwidCI6ImIzMmI3Y2UwLTg4ZGUtNGEzMi1hMGQzLTY5YTM0OGRiZmUwZSIsImMiOjl9&pageName=ReportSection" frameborder="0" allowFullScreen="true"></iframe>}
         </div>
         </div>
     );

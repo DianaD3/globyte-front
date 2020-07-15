@@ -14,3 +14,5 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+
+#node js e environemnt, nginx este ceva lightweight care poate sa imi construiasca server-ul de front (?)
