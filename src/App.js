@@ -30,7 +30,7 @@ import { forEach } from 'gl-matrix/src/gl-matrix/vec3';
 import GlobyteNavbar from './GlobyteNavbar.js'
 import { grey } from '@material-ui/core/colors';
 
-const url = 'http://localhost:5000'
+const url = 'https://globyteapi.azurewebsites.net'
 const { token, mapStyles } = require('./config.json');
 
 const Map = ReactMapboxGl({

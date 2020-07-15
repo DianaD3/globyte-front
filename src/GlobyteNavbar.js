@@ -18,7 +18,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 
 import axios from 'axios';
-const url = 'http://localhost:5000'
+const url = 'https://globyteapi.azurewebsites.net'
 
 
 function GlobyteNavbar(props) {
