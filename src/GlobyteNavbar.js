@@ -18,44 +18,42 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 
 import axios from 'axios';
-const url = 'https://globyteapi.azurewebsites.net'
+const url = 'http://localhost:5000'
 
 
 function GlobyteNavbar(props) {
-  const [token, setToken] = useState(undefined) //constructor
+  const [token, setToken] = useState(undefined) 
   const [username, setUsername] = useState(undefined)
 
-  //dupa orice set apeleaza functia asta
+  //after set, call this
+  //first param is the action, second is who determines the action
   useEffect(() => {
-    //daca dupa change nu am un token
     if(!token){
-      setUsername(undefined); //set user ca undefined
-      props.onChange(token); //orice parinte sa stie ca token-ul meu este acum noul token setat ca undefined
-      //onChange -> toate componentele care au Navbar in componenta o sa stie ca ceva s-a schimbat, le dau token-ul nou
+      setUsername(undefined); 
+      props.onChange(token); 
+      
     }
     else {
       console.log(token)
       axios.post(`${url}/auth/getCurrentUser`, {}, {headers: {'Authorization': token}}).then(res => {
         const response = res.data;
         console.log(response)
-        if(!response.err){ //daca nu exista o eroare
+        if(!response.err){ 
           setUsername(response.user.username);  
-          props.onChange(token); //anunt toate componentele parinte ca s-a schimbat token-ul
-          //refreshPage()
+          props.onChange(token); 
+        
         }
       })
     }
-  }, [token]) //useEffect(actiune, in functie de cine fac actiunea? - in functie de token)
+  }, [token]) 
 
-  function handleChange(newToken){ //apelat cand o componenta copil (ex:navitem)
+  function handleChange(newToken){ 
     setToken(newToken);
     if(!newToken){
       refreshPage();
     }
   }
 
-  //daca nu sunt logat(am un token) imi apare meniul de logout, daca sunt delogat(nu am token) vreau sa ma pot deloga
-  //$ concateneaza o variabila la un string
   return (
     <Navbar>
       <a style={{"alignSelf": "center"}}><h3>{token ? `\nBine ai venit, ${username ? username : '...'}!` : 'Autentificare'}</h3></a>
@@ -129,7 +127,7 @@ function DropdownLogoutMenu(props) {
     );
   }
 
-//atunci cand se schimba continutul unui field -> imi ia formData si le pune in newFormData, le schimba cu val actuala(e.target.value) si le acutalizez cu setFormData
+
   function DropdownField(props) {
     return (
       <a href="#" className='dd-field' onChange={(e) => {let newFormData = formData; newFormData[props.id]=e.target.value; setFormData(newFormData)}}>
@@ -184,7 +182,7 @@ function DropdownAuthMenu(props) {
       if(!response.err){
         setError(false);
         props.onChange(response.token)
-        //refreshPage()
+        
       }
       else {
         setError(true)

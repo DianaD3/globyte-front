@@ -30,7 +30,7 @@ import { forEach } from 'gl-matrix/src/gl-matrix/vec3';
 import GlobyteNavbar from './GlobyteNavbar.js'
 import { grey } from '@material-ui/core/colors';
 
-const url = 'https://globyteapi.azurewebsites.net'
+const url = 'http://localhost:5000'
 const { token, mapStyles } = require('./config.json');
 
 const Map = ReactMapboxGl({
@@ -51,11 +51,11 @@ const layerPaint = {
     stops: [[0, 0], [5, 2]]
   },
   // Increase the heatmap color weight weight by zoom level
-  // heatmap-ntensity is a multiplier on top of heatmap-weight
+  // heatmap-intensity is a multiplier on top of heatmap-weight
   'heatmap-intensity': {
     stops: [[0, 0], [5, 1.2]]
   },
-  // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+  // Color for heatmap.  Domain is 0 (low) to 1 (high).
   // Begin color ramp at 0-stop with a 0-transparancy color
   // to create a blur-like effect.
   'heatmap-color': [
@@ -147,7 +147,7 @@ class App extends PureComponent {
     else{
     axios.get(`${url}/get/layer/time/${this.state.selectedLayer}/${this.state.selectedStartDate}/00:00:00/${this.state.selectedEndDate}/00:00:00`, {crossdomain: true})
       .then(res => {
-        const response = res.data; //body-ul responsului
+        const response = res.data; 
         console.log(response)
         if(!response || response.features.length == 0){
           alert("Nu există date pentru perioada și tipul selectat.")
@@ -159,7 +159,8 @@ class App extends PureComponent {
     }
   }
 
-  getLayers(token) { // preia numele straturilor
+  // get the name of the layers
+  getLayers(token) { 
     if(token){
       this.state.loggedIn = true
       
@@ -205,7 +206,6 @@ class App extends PureComponent {
   };
 
 
-// imi construieste? pagina
   render() {
     const { classes } = this.props;
     return (
@@ -240,9 +240,11 @@ class App extends PureComponent {
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                 <div>
+                  
                 <Typography variant="body1" gutterBottom>
                     Selectați următoarele informații:
                 </Typography>
+
                 <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="layers">Tipul dezastrului natural</InputLabel>
                     <Select
@@ -255,9 +257,11 @@ class App extends PureComponent {
                         {this.renderListOfLayers()}
                     </Select>
                 </FormControl>
+
                 <div>
                   {!this.state.loggedIn && <a style={{fontSize: 13, color: grey, }}>Atenție: Vă rugăm să vă autentificați pentru a vedea mai multe tipuri de dezastre și rapoartele de analiză!</a>}
                 </div>
+
                 <Typography variant="body1" gutterBottom style={{"marginTop":"40px"}}>
                     Selectați Data Inițială:
                 </Typography>
